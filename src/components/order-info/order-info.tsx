@@ -1,21 +1,44 @@
-import { FC, useMemo } from 'react';
+/* eslint-disable prettier/prettier */
+import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { useDispatch, useSelector } from '../../services/store';
+import { useParams } from 'react-router-dom';
+import { getIngridients } from '../../services/slices/getIngridientsSlice';
+import { getOrderbyNumber, getOrders, selectOrder, selectOrderById } from '../../services/slices/orderSlice';
 
 export const OrderInfo: FC = () => {
   /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+  // const orderData = {
+  //   createdAt: '',
+  //   ingredients: [],
+  //   _id: '',
+  //   status: '',
+  //   name: '',
+  //   updatedAt: 'string',
+  //   number: 0
+  // };
+  // const ingredients: TIngredient[] = useSelector(getIngridients);
+  const {id} = useParams();
+  const orderData = useSelector(selectOrderById(Number(id)));
+  // const orderD = orderData
+  // const orderData = useSelector((state) =>
+  //   state.order.order && state.order.order.number === Number(id)
+  //     ? state.order.order
+  //     : null);
+  console.log('Current state order info:', useSelector(state => state));
+  console.log('OrderInfo orderData', orderData);
+  const dispatch = useDispatch();
+
 
   const ingredients: TIngredient[] = [];
+
+  useEffect(() => {
+    // dispatch(getOrders());
+    dispatch(getOrderbyNumber(Number(id)));
+    console.log('OrderInfo useEffect', orderData);
+  }, [dispatch, id]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
