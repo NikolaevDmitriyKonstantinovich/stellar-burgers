@@ -5,8 +5,9 @@ import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useDispatch, useSelector } from '../../services/store';
 import { useParams } from 'react-router-dom';
-import { getIngridients } from '../../services/slices/getIngridientsSlice';
+import { getIngridients, selectIngredients } from '../../services/slices/getIngridientsSlice';
 import { getOrderbyNumber, getOrders, selectOrder, selectOrderById } from '../../services/slices/orderSlice';
+import { selectOrders } from '../../services/slices/mainPageSlice';
 
 export const OrderInfo: FC = () => {
   /** TODO: взять переменные orderData и ingredients из стора */
@@ -20,25 +21,37 @@ export const OrderInfo: FC = () => {
   //   number: 0
   // };
   // const ingredients: TIngredient[] = useSelector(getIngridients);
-  const {id} = useParams();
-  const orderData = useSelector(selectOrderById(Number(id)));
-  // const orderD = orderData
+  const { number } = useParams<{ number: string }>();
+  console.log('current page id', number);
   // const orderData = useSelector((state) =>
   //   state.order.order && state.order.order.number === Number(id)
-  //     ? state.order.order
-  //     : null);
+  //   ? state.order.order  
+  //   : null 
+  // );
+
+  const allOrders = useSelector(selectOrders);
+  console.log('select orders', useSelector(selectOrders));
+  // console.log('orderData oi21', orderData);
+  console.log('allOrders', allOrders);
+  // const orderData = allOrders.find(order => order.number === Number(number));
+  // const orderData = useSelector(selectOrderById(Number(number)));
+  // const orderD = orderData
+  const orderData = useSelector((state) =>
+    state.order.order && state.order.order.number === Number(number)
+      ? state.order.order
+      : null);
   console.log('Current state order info:', useSelector(state => state));
-  console.log('OrderInfo orderData', orderData);
+  console.log('OrderInfo orderData3', orderData);
   const dispatch = useDispatch();
 
 
-  const ingredients: TIngredient[] = [];
+  const ingredients: TIngredient[] = useSelector(selectIngredients);
 
   useEffect(() => {
     // dispatch(getOrders());
-    dispatch(getOrderbyNumber(Number(id)));
+    dispatch(getOrderbyNumber(Number(number)));
     console.log('OrderInfo useEffect', orderData);
-  }, [dispatch, id]);
+  }, [dispatch, number]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -81,7 +94,7 @@ export const OrderInfo: FC = () => {
       total
     };
   }, [orderData, ingredients]);
-
+  console.log('OrderInfo 3', orderInfo); //null
   if (!orderInfo) {
     return <Preloader />;
   }

@@ -8,10 +8,10 @@ import {
   TRegisterData,
   updateUserApi
 } from '@api';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
 import exp from 'constants';
-import { deleteCookie, setCookie } from '../../utils/cookie';
+import { deleteCookie, getCookie, setCookie } from '../../utils/cookie';
 import { log } from 'console';
 
 export const userRegistration = createAsyncThunk(
@@ -24,9 +24,21 @@ export const userRegistration = createAsyncThunk(
   }
 );
 
-export const checkUserAuth = createAsyncThunk('checkUserAuth', async () => {
-  await getUserApi();
+export const checkUserAuth = createAsyncThunk('checkUserAuth', async (_, { dispatch }) => {
+  if (getCookie('accessToken')) {
+    try {
+      const userApi = await getUserApi();
+      dispatch(setUser(userApi.user));
+    } finally {
+      dispatch(setIsAuth(true));
+    }
+  } else {
+    dispatch(setIsAuth(true));
+  }
 });
+
+
+
 
 export const loginUser = createAsyncThunk(
   'loginUser',
@@ -73,7 +85,15 @@ const initialState: userState = {
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    setIsAuth: (state,action: PayloadAction<boolean>) => {
+      state.isAuth = action.payload; 
+    },
+
+    setUser: (state, action: PayloadAction<TUser | null>) => {
+      state.user= action.payload; 
+    },
+  },
   selectors: {},
   extraReducers: (builder) => {
     builder.addCase(userRegistration.pending, (state) => {
@@ -131,3 +151,4 @@ export const authSlice = createSlice({
 export const getUser = (state: { auth: userState }) => state.auth.user;
 export const getIsLoading = (state: { auth: userState }) => state.auth.isLoading;
 export const getIsAuth = (state: { auth: userState }) => state.auth.isAuth;
+export const { setUser, setIsAuth } = authSlice.actions;

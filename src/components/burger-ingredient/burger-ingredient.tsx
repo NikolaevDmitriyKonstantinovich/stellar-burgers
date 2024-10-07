@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { FC, memo } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -15,6 +16,7 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
       dispatch(addIngredient(ingredient));
       //A case reducer on a non-draftable value
     };
+    console.log('count ingr',count);
 
     return (
       <BurgerIngredientUI

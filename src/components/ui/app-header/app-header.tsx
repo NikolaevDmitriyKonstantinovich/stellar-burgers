@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { FC } from 'react';
 import styles from './app-header.module.css';
 import { TAppHeaderUIProps } from './type';
@@ -26,9 +27,11 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
           </NavLink>
         </>
       </div>
+      <NavLink to={'/'}>
       <div className={styles.logo}>
         <Logo className='' />
       </div>
+      </NavLink>
       <div className={styles.link_position_last}>
         <ProfileIcon type={'primary'} />
         <NavLink className='text text_type_main-default ml-2' to={'/profile'}>

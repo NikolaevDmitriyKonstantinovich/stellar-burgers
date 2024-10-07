@@ -4,7 +4,7 @@ import { LoginUI } from '@ui-pages';
 import { getIsAuth, loginUser } from '../../services/slices/authSlice';
 import { TLoginData } from '../../utils/burger-api';
 import { useDispatch, useSelector } from '../../services/store';
-import { setCookie } from '../../utils/cookie';
+import { getCookie, setCookie } from '../../utils/cookie';
 import { useNavigate } from 'react-router-dom';
 
 export const Login: FC = () => {
@@ -27,11 +27,13 @@ export const Login: FC = () => {
       email,
       password
     }))
-    // .unwrap()
-    // .then((res) => {
-    //   setCookie('accessToken', res.accessToken);
-    //   localStorage.setItem('refreshToken', res.refreshToken);
-    // });
+    const accessToken = getCookie('accessToken');
+if (accessToken) {
+  console.log('Access Token found in cookies:', accessToken);
+} else {
+  console.log('No Access Token in cookies');
+}
+
     console.log('userLoginData', userLoginData);
     console.log('handleSubmitLogin');
     // POST https://norma.nomoreparties.space/api/auth/login 401 (Unauthorized)

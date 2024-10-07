@@ -22,6 +22,7 @@ import { AppDispatch, useDispatch } from '../../services/store';
 import { getIngridients } from '../../services/slices/getIngridientsSlice';
 import { ProtectedRoute } from '../protected-route/protected-route';
 import { checkUserAuth } from '../../services/slices/authSlice';
+import { getCookie } from '../../utils/cookie';
 
 const App = () => {
   const location = useLocation();
@@ -33,15 +34,23 @@ const App = () => {
     nav(-1);
   }
   useEffect(() => {
-    dispatch(checkUserAuth);
+    dispatch(checkUserAuth())
+    .unwrap()
+    .catch((error) => {
+      console.error('Error during user authentication check:', error);
+    });
+    const accessToken = getCookie('accessToken');
+    console.log('app Access Token:', accessToken);
     console.log('App useEffect');
+    const refreshToken = localStorage.getItem('refreshToken');
+    console.log('app Refresh Token:', refreshToken);
     dispatch(getIngridients());
   }, [dispatch]);
 
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Routes>
+      <Routes  location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
         <Route path='/login' element={<ProtectedRoute forNotAuth={true}><Login /></ProtectedRoute>} />
@@ -50,6 +59,9 @@ const App = () => {
         <Route path='/reset-password' element={<ProtectedRoute><ResetPassword /></ProtectedRoute>} />
         <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path='/profile/orders' element={<ProtectedRoute><ProfileOrders /></ProtectedRoute>} />
+        <Route path='/ingredients/:id' element={<IngredientDetails />} /> {/* Отдельный маршрут для деталей */}
+        <Route path='/feed/:number' element={<OrderInfo />} /> {/* Отдельный маршрут для OrderInfo */}
+        <Route path='/profile/orders/:number' element={<OrderInfo />} /> {/* Отдельный маршрут для профиля заказов */}
         <Route path='*' element={<NotFound404 />} />
       </Routes>
       {background && (
