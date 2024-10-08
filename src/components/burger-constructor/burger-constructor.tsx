@@ -10,7 +10,7 @@ import {
 } from '../../services/slices/orderSlice';
 import { useDispatch, useSelector } from '../../services/store';
 import { useNavigate } from 'react-router-dom';
-import { checkUserAuth, getIsAuth } from '../../services/slices/authSlice';
+import { checkUserAuth, getIsAuth, getUser } from '../../services/slices/authSlice';
 import { getConstructorItems, selectOrderModalData, selectOrderRequest } from '../../services/slices/constructorSlice';
 
 export const BurgerConstructor: FC = () => {
@@ -21,7 +21,9 @@ const dispatch = useDispatch();
 console.log('Current state:', useSelector(state => state));
 
 const isAuth = useSelector(getIsAuth);
+const checkAuth = useSelector(checkUserAuth);
 const constructorItems = useSelector(getConstructorItems); 
+const user = useSelector(getUser); 
 
 const orderLoading = useSelector(selectOrderRequest);
 const orderModal = useSelector(selectOrder);
@@ -31,7 +33,7 @@ const navigate = useNavigate();
 
 
 const onOrderClick = () => {
-  if (!isAuth) {
+  if (!user) {
     return navigate('/login');
   }
   if (!constructorItems.bun || orderLoading) return;
