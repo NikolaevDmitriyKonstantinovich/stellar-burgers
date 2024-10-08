@@ -1,12 +1,21 @@
+/* eslint-disable prettier/prettier */
 import { ProfileUI } from '@ui-pages';
-import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { FC, SyntheticEvent, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import { getUser, updateUserAuth } from '../../services/slices/authSlice';
+import { TUser } from '@utils-types';
 
 export const Profile: FC = () => {
   /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  const dispatch = useDispatch();
+  // const user = useMemo(
+  //   () => ({
+  //     name: '',
+  //     email: ''
+  //   }),
+  //   []
+  // );
+  const user = useSelector(getUser) as TUser;
 
   const [formValue, setFormValue] = useState({
     name: user.name,
@@ -29,6 +38,12 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    dispatch(
+      updateUserAuth({
+        email: formValue.email,
+        name: formValue.name,
+        password: formValue.password
+      }))
   };
 
   const handleCancel = (e: SyntheticEvent) => {
