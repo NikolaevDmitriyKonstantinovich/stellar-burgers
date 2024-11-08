@@ -19,7 +19,7 @@ type constructorState = {
   loading: boolean;
   
 };
-const initialState: constructorState = {
+export const initialState: constructorState = {
   constructorItems: {
     bun: null,
     ingredients: []
@@ -81,6 +81,10 @@ export const burgerConstructorSlice = createSlice({
           ingredients[indexAction + 1]
         ];
       }
+    },
+    clearConstructor: (state) => {
+      state.constructorItems.bun = null;
+      state.constructorItems.ingredients = [];
     },
 
     deleteIngredient: (
@@ -145,7 +149,8 @@ export const {
   deleteIngredient,
   upIngredient,
   downIngredient,
-  clearOrder
+  clearOrder,
+  clearConstructor
 } = burgerConstructorSlice.actions;
 
 export default burgerConstructorSlice.reducer;

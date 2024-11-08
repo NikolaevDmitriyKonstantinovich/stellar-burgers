@@ -11,7 +11,8 @@ import {
 import { useDispatch, useSelector } from '../../services/store';
 import { useNavigate } from 'react-router-dom';
 import { checkUserAuth, getIsAuth, getUser } from '../../services/slices/authSlice';
-import { getConstructorItems, selectOrderModalData, selectOrderRequest } from '../../services/slices/constructorSlice';
+import { clearConstructor, getConstructorItems, selectOrderModalData, selectOrderRequest } from '../../services/slices/constructorSlice';
+import { clear } from 'node:console';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
@@ -45,6 +46,7 @@ const onOrderClick = () => {
   ].filter(Boolean);
 
   dispatch(createOrder(order));
+  dispatch(clearConstructor());
 };
 
 
