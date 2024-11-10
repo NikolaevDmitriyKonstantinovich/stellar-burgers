@@ -26,7 +26,8 @@ const checkAuth = useSelector(checkUserAuth);
 const constructorItems = useSelector(getConstructorItems); 
 const user = useSelector(getUser); 
 
-const orderLoading = useSelector(selectOrderRequest);
+const orderLoad = useSelector(selectOrderRequest);
+const orderLoading = useSelector(selectLoading);
 const orderModal = useSelector(selectOrder);
 console.log('orderModal', orderModal);
 
@@ -45,8 +46,12 @@ const onOrderClick = () => {
     constructorItems.bun?._id
   ].filter(Boolean);
 
-  dispatch(createOrder(order));
-  dispatch(clearConstructor());
+  dispatch(createOrder(order))
+    .then((result) => {
+      if (createOrder.fulfilled.match(result)) { // успешное выполнение createOrder
+        dispatch(clearConstructor());
+      }
+    });
 };
 
 

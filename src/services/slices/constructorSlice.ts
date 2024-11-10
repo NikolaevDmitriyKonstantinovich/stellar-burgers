@@ -70,6 +70,7 @@ export const burgerConstructorSlice = createSlice({
           ingredients[indexAction - 1]
         ];
       }
+      console.log('upIngredient');
     },
 
     downIngredient: (state, action: PayloadAction<number>) => {
@@ -81,6 +82,7 @@ export const burgerConstructorSlice = createSlice({
           ingredients[indexAction + 1]
         ];
       }
+      console.log('downIngredient');
     },
     clearConstructor: (state) => {
       state.constructorItems.bun = null;
@@ -119,6 +121,7 @@ export const burgerConstructorSlice = createSlice({
         state.constructorItems.bun = null;
         state.constructorItems.ingredients = [];
         state.errorState = null;
+        console.log('createOrder.fulfilled');
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.orderRequest = false;

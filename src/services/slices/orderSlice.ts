@@ -3,6 +3,8 @@
 import { getOrderByNumberApi, getOrdersApi, orderBurgerApi } from '../../utils/burger-api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
+import { clearConstructor } from './constructorSlice';
+import { useDispatch } from 'react-redux';
 
 export const createOrder = createAsyncThunk(
   'createOrder',
@@ -11,6 +13,8 @@ export const createOrder = createAsyncThunk(
     return res;
   }
 );
+
+
 
 export const getOrders = createAsyncThunk('getOrders', async () => {
   const res = await getOrdersApi();

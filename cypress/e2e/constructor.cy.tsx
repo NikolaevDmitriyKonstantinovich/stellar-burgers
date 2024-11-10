@@ -17,10 +17,14 @@ describe('e2e', () => {
     cy.setCookie('accessToken', 'testAccessToken');
     localStorage.setItem('refreshToken', 'testRefreshToken');
   });
-  afterEach(() => {});
+  afterEach(() => {
+    cy.clearCookie('accessToken');
+    cy.clearLocalStorage('refreshToken');
+  });
 
   it('add ingridients to list', () => {
     cy.visit('/');
+    cy.contains('[data-test=constructor-element]', 'Соус фирменный Space Sauce').should('not.exist');
     cy.get(
       '[data-test=ingredient-643d69a5c3f7b9001cfa0943] button[type=button]'
     ).click();
@@ -31,6 +35,7 @@ describe('e2e', () => {
 
   it('open and close modal vindow', () => {
     cy.visit('/');
+    cy.get('[data-test=ingredient-details]').should('not.exist');
     cy.get('[data-test=ingredient-643d69a5c3f7b9001cfa0943]').click();
     cy.get('[data-test=ingredient-details]').should('exist');
     cy.get('[data-test=modal] button[type=button]').click();
@@ -40,6 +45,9 @@ describe('e2e', () => {
   it('get order', () => {
     cy.visit('/');
     //add ingredient
+    //check existance
+    cy.contains('[data-test=constructor-element]', 'Соус фирменный Space Sauce').should('not.exist');
+    cy.contains('[data-test=burger-constructor-bun-top]', 'Краторная булка N-200i').should('not.exist');
     cy.get(
       '[data-test=ingredient-643d69a5c3f7b9001cfa0943] button[type=button]'
     ).click();
@@ -54,6 +62,8 @@ describe('e2e', () => {
     .contains('Краторная булка N-200i')
     .should('exist');
     //get order
+    cy.contains('[data-test=modal]', '65464').should('not.exist');
+    cy.contains('[data-test=modal]', 'Ваш заказ начали готовить').should('not.exist');
     cy.get('[data-test=get-order-button]').trigger('click');
     cy.get('[data-test=modal]').contains('65464').should('exist');
     cy.get('[data-test=modal]')
