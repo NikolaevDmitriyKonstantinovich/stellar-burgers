@@ -11,7 +11,8 @@ import {
 import { useDispatch, useSelector } from '../../services/store';
 import { useNavigate } from 'react-router-dom';
 import { checkUserAuth, getIsAuth, getUser } from '../../services/slices/authSlice';
-import { getConstructorItems, selectOrderModalData, selectOrderRequest } from '../../services/slices/constructorSlice';
+import { clearConstructor, getConstructorItems, selectOrderModalData, selectOrderRequest } from '../../services/slices/constructorSlice';
+import { clear } from 'node:console';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
@@ -25,7 +26,8 @@ const checkAuth = useSelector(checkUserAuth);
 const constructorItems = useSelector(getConstructorItems); 
 const user = useSelector(getUser); 
 
-const orderLoading = useSelector(selectOrderRequest);
+const orderLoad = useSelector(selectOrderRequest);
+const orderLoading = useSelector(selectLoading);
 const orderModal = useSelector(selectOrder);
 console.log('orderModal', orderModal);
 
@@ -44,7 +46,12 @@ const onOrderClick = () => {
     constructorItems.bun?._id
   ].filter(Boolean);
 
-  dispatch(createOrder(order));
+  dispatch(createOrder(order))
+    .then((result) => {
+      if (createOrder.fulfilled.match(result)) { // успешное выполнение createOrder
+        dispatch(clearConstructor());
+      }
+    });
 };
 
 

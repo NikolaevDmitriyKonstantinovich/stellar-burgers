@@ -19,7 +19,7 @@ type constructorState = {
   loading: boolean;
   
 };
-const initialState: constructorState = {
+export const initialState: constructorState = {
   constructorItems: {
     bun: null,
     ingredients: []
@@ -70,6 +70,7 @@ export const burgerConstructorSlice = createSlice({
           ingredients[indexAction - 1]
         ];
       }
+      console.log('upIngredient');
     },
 
     downIngredient: (state, action: PayloadAction<number>) => {
@@ -81,6 +82,11 @@ export const burgerConstructorSlice = createSlice({
           ingredients[indexAction + 1]
         ];
       }
+      console.log('downIngredient');
+    },
+    clearConstructor: (state) => {
+      state.constructorItems.bun = null;
+      state.constructorItems.ingredients = [];
     },
 
     deleteIngredient: (
@@ -115,6 +121,7 @@ export const burgerConstructorSlice = createSlice({
         state.constructorItems.bun = null;
         state.constructorItems.ingredients = [];
         state.errorState = null;
+        console.log('createOrder.fulfilled');
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.orderRequest = false;
@@ -145,7 +152,8 @@ export const {
   deleteIngredient,
   upIngredient,
   downIngredient,
-  clearOrder
+  clearOrder,
+  clearConstructor
 } = burgerConstructorSlice.actions;
 
 export default burgerConstructorSlice.reducer;

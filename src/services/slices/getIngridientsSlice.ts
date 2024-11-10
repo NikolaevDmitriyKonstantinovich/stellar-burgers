@@ -1,4 +1,4 @@
-import { getIngredientsApi } from '@api';
+import { getIngredientsApi } from '../../utils/burger-api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TIngredient } from '@utils-types';
 
@@ -40,7 +40,7 @@ export const getIngridientsSlice = createSlice({
       console.log('getIngridients pending');
     });
     builder.addCase(getIngridients.rejected, (state, action) => {
-      console.error('Failed to load ingredients:', action.error.message);
+      console.error('Failed to load ingredients:', action.error?.message);
       state.ingridients = [];
       state.isLoading = false;
     });
